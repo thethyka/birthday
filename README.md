@@ -51,6 +51,7 @@ birthday-website/
 │   ├── layout.tsx        # Global layout
 │   ├── page.tsx          # Home page
 │   ├── gallery/          # Photo gallery
+│   ├── peeeeeeeeeple/    # Peeeeeeeeeple
 │   ├── video/            # Video section
 │   ├── memories/         # Birthday wishes
 │   └── globals.css       # Global styles
