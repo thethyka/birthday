@@ -20,7 +20,8 @@ export default function GalleryPage() {
       try {
         // Use basePath aware fetch (Next will rewrite appropriately). We include cache-busting param for randomness if needed.
         const res = await fetch(`/gallery-images.json`);
-        if (!res.ok) throw new Error(`Failed to load gallery-images.json: ${res.status}`);
+        if (!res.ok)
+          throw new Error(`Failed to load gallery-images.json: ${res.status}`);
         const files: string[] = await res.json();
         // Shuffle
         const arr = [...files];
@@ -34,7 +35,7 @@ export default function GalleryPage() {
               src: `/groupImages/${file}`,
               title: "",
               description: "",
-            })),
+            }))
           );
         }
       } catch (e) {
@@ -61,7 +62,7 @@ export default function GalleryPage() {
   const prevPhoto = () => {
     if (selectedPhoto !== null) {
       setSelectedPhoto(
-        selectedPhoto === 0 ? photos.length - 1 : selectedPhoto - 1,
+        selectedPhoto === 0 ? photos.length - 1 : selectedPhoto - 1
       );
     }
   };
@@ -78,11 +79,6 @@ export default function GalleryPage() {
           <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">
             Photo Gallery 📸
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
-            {
-              "A collection of beautiful memories and moments that capture your amazing spirit! (Randomized each visit)"
-            }
-          </p>
         </div>
 
         {/* Photo Grid */}
