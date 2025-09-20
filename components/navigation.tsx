@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, Camera, Video, Heart, Gift } from "lucide-react";
+import { getBirthdayPersonPossessive } from "@/lib/config";
 
 export function Navigation() {
   const pathname = usePathname();
+  const birthdayPersonPossessive = getBirthdayPersonPossessive();
 
   const navItems = [
     { href: "/", label: "Home", icon: Home },
@@ -23,7 +25,7 @@ export function Navigation() {
             className="flex items-center gap-2 text-purple-600 font-bold text-xl"
           >
             <Gift className="animate-bounce" size={24} />
-            Sashah's Birthday
+            {birthdayPersonPossessive} Birthday
           </Link>
 
           <div className="flex items-center gap-1">

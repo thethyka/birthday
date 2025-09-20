@@ -4,12 +4,15 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { MusicProvider } from "../components/music-provider";
 import { Navigation } from "../components/navigation";
+import { getBirthdayPersonName } from "@/lib/config";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const birthdayPersonName = getBirthdayPersonName();
+
 export const metadata: Metadata = {
-  title: "Happy Birthday Sashah! 🎉",
-  description: "A special birthday website created with love for Sashah",
+  title: `Happy Birthday ${birthdayPersonName}! 🎉`,
+  description: `A special birthday website created with love for ${birthdayPersonName}`,
   generator: "Shivam",
 };
 

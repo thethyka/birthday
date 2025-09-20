@@ -6,7 +6,20 @@ A beautiful, dynamic multi-page birthday celebration website built with **Next.j
 
 ## ✏️ Personalize the Website
 
-Before sharing or deploying, make sure to replace all instances of Sashah in the project files with your friend's name to personalize the experience.
+You can easily personalize the website for any birthday person by setting the `NEXT_PUBLIC_BIRTHDAY_NAME` environment variable.
+
+### Quick Setup:
+1. **Copy the example environment file:**
+   ```bash
+   cp .env.example .env.local
+   ```
+2. **Edit `.env.local` and set the birthday person's name:**
+   ```bash
+   NEXT_PUBLIC_BIRTHDAY_NAME="Your Friend's Name"
+   ```
+3. **Restart the development server** and the website will use the new name throughout!
+
+If no environment variable is set, it defaults to "Sashah". This approach allows you to reuse the same website for multiple birthdays without editing code files.
 
 ---
 

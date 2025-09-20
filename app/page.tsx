@@ -5,9 +5,11 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { BackgroundEffects } from "../components/background-effects";
 import { ArrowRight, Gift, Sparkles, Heart } from "lucide-react";
+import { getBirthdayPersonName } from "@/lib/config";
 
 export default function HomePage() {
   const [showContent, setShowContent] = useState(false);
+  const birthdayPersonName = getBirthdayPersonName();
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 500);
@@ -30,7 +32,7 @@ export default function HomePage() {
               Happy Birthday
             </h1>
             <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-purple-600 animate-bounce">
-              Sashah! 🎉
+              {birthdayPersonName}! 🎉
             </h2>
           </div>
 
@@ -63,7 +65,7 @@ export default function HomePage() {
               A Special Day for a Special Person
             </h3>
             <p className="text-lg md:text-xl text-gray-700 leading-relaxed mb-6">
-              {`Today is all about celebrating YOU, Sashah! Your kindness, your laughter, your amazing spirit - 
+              {`Today is all about celebrating YOU, ${birthdayPersonName}! Your kindness, your laughter, your amazing spirit - 
               everything that makes you absolutely wonderful. This website is filled with memories, love, and 
               all the reasons why you're so special to everyone who knows you.`}
             </p>
