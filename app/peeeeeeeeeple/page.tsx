@@ -16,6 +16,9 @@ export default function GalleryPage() {
   const [people, setPeople] = useState<Person[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   
+  // Get current person
+  const currentPerson = people[currentIndex];
+  
   // Animate header
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 300);
@@ -56,38 +59,40 @@ export default function GalleryPage() {
           </p>
         </div>
 
-      {/* Single Person Card */}
-      {currentPerson && (
-        <div className="relative w-full max-w-md">
-          <PersonCard
-            key={currentPerson.name}
-            name={currentPerson.name}
-            message={currentPerson.message}
-            photoUrl={currentPerson.photoUrl}
-          />
+        {/* Single Person Card */}
+        {currentPerson && (
+          <div className="relative w-full max-w-md mx-auto">
+            <PersonCard
+              key={currentPerson.name}
+              name={currentPerson.name}
+              message={currentPerson.message}
+              photoUrl={currentPerson.photoUrl}
+            />
 
-          {/* Navigation Buttons */}
-          <button
-            onClick={goPrev}
-            className="absolute top-1/2 -left-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
-          >
-            <ChevronLeft size={28} />
-          </button>
+            {/* Navigation Buttons */}
+            <button
+              onClick={goPrev}
+              className="absolute top-1/2 -left-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
+            >
+              <ChevronLeft size={28} />
+            </button>
 
-          <button
-            onClick={goNext}
-            className="absolute top-1/2 -right-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
-          >
-            <ChevronRight size={28} />
-          </button>
-        </div>
+            <button
+              onClick={goNext}
+              className="absolute top-1/2 -right-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
+            >
+              <ChevronRight size={28} />
+            </button>
+          </div>
+        )}
 
-      {/* Footer: Index */}
-      {people.length > 0 && (
-        <p className="mt-6 text-gray-600">
-          {currentIndex + 1} / {people.length}
-        </p>
-      )}
+        {/* Footer / Index */}
+        {people.length > 0 && (
+          <p className="mt-6 text-gray-600 text-center">
+            {currentIndex + 1} / {people.length}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
