@@ -15,10 +15,10 @@ export default function GalleryPage() {
   const [showContent, setShowContent] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   // Get current person
   const currentPerson = people[currentIndex];
-  
+
   // Animate header
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 300);
@@ -42,7 +42,7 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="min-h-screen pt-16 relative">
+    <div className="min-h-screen pt-16 relative overflow-x-hidden">
       <BackgroundEffects />
 
       <div className="container mx-auto px-4 py-12 relative z-10 h-[calc(100vh-4rem)] flex flex-col">
@@ -62,23 +62,24 @@ export default function GalleryPage() {
               key={currentPerson.name}
               name={currentPerson.name}
               message={currentPerson.message}
-              photoUrl={currentPerson.photoUrl}
-
+              photoUrl={`/birthday/${currentPerson.photoUrl}`}
             />
 
             {/* Navigation Buttons */}
             <button
               onClick={goPrev}
-              className="absolute top-1/2 -left-16 -translate-y-1/2 p-3 rounded-full bg-white shadow hover:bg-gray-100"
+              aria-label="Previous"
+              className="absolute top-1/2 left-2 sm:left-4 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-white shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              <ChevronLeft size={28} />
+              <ChevronLeft size={24} />
             </button>
 
             <button
               onClick={goNext}
-              className="absolute top-1/2 -right-16 -translate-y-1/2 p-3 rounded-full bg-white shadow hover:bg-gray-100"
+              aria-label="Next"
+              className="absolute top-1/2 right-2 sm:right-4 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-white shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              <ChevronRight size={28} />
+              <ChevronRight size={24} />
             </button>
           </div>
         )}
