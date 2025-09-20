@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BackgroundEffects } from "../../components/background-effects";
@@ -10,68 +10,42 @@ export default function GalleryPage() {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
   const [showContent, setShowContent] = useState(false);
 
-  const photos = [
-    {
-      src: "/images/dummy1.jpg",
-      title: "Dummy Photo 1",
-      description: "This is a placeholder description for photo 1.",
-    },
-    {
-      src: "/images/dummy2.jpg",
-      title: "Dummy Photo 2",
-      description: "This is a placeholder description for photo 2.",
-    },
-    {
-      src: "/images/dummy3.jpg",
-      title: "Dummy Photo 3",
-      description: "This is a placeholder description for photo 3.",
-    },
-    {
-      src: "/images/dummy4.jpg",
-      title: "Dummy Photo 4",
-      description: "This is a placeholder description for photo 4.",
-    },
-    {
-      src: "/images/dummy5.jpg",
-      title: "Dummy Photo 5",
-      description: "This is a placeholder description for photo 5.",
-    },
-    {
-      src: "/images/dummy6.jpg",
-      title: "Dummy Photo 6",
-      description: "This is a placeholder description for photo 6.",
-    },
-    {
-      src: "/images/dummy7.jpg",
-      title: "Dummy Photo 7",
-      description: "This is a placeholder description for photo 7.",
-    },
-    {
-      src: "/images/dummy8.jpg",
-      title: "Dummy Photo 8",
-      description: "This is a placeholder description for photo 8.",
-    },
-    {
-      src: "/images/dummy9.jpg",
-      title: "Dummy Photo 9",
-      description: "This is a placeholder description for photo 9.",
-    },
-    {
-      src: "/images/dummy10.jpg",
-      title: "Dummy Photo 10",
-      description: "This is a placeholder description for photo 10.",
-    },
-    {
-      src: "/images/dummy11.jpg",
-      title: "Dummy Photo 11",
-      description: "This is a placeholder description for photo 11.",
-    },
-    {
-      src: "/images/dummy12.jpg",
-      title: "Dummy Photo 12",
-      description: "This is a placeholder description for photo 12.",
-    },
-  ];
+  const [photos, setPhotos] = useState<
+    { src: string; title: string; description: string }[]
+  >([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      try {
+        // Use basePath aware fetch (Next will rewrite appropriately). We include cache-busting param for randomness if needed.
+        const res = await fetch(`/gallery-images.json`);
+        if (!res.ok) throw new Error(`Failed to load gallery-images.json: ${res.status}`);
+        const files: string[] = await res.json();
+        // Shuffle
+        const arr = [...files];
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        if (!cancelled) {
+          setPhotos(
+            arr.map((file, idx) => ({
+              src: `/groupImages/${file}`,
+              title: `Memory ${idx + 1}`,
+              description: "A cherished birthday memory!",
+            })),
+          );
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 300);
@@ -106,7 +80,7 @@ export default function GalleryPage() {
           </h1>
           <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
             {
-              "A collection of beautiful memories and moments that capture your amazing spirit!"
+              "A collection of beautiful memories and moments that capture your amazing spirit! (Randomized each visit)"
             }
           </p>
         </div>
