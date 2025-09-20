@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 
+
 # next.js
 /.next/
 /out/
@@ -28,3 +29,5 @@ next-env.d.ts
 
 # extras
 /public/people.json
+
+/public/gallery-images.json
