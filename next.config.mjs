@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: "export",
   trailingSlash: true,
-  basePath: '/birthday',
+  basePath: "/birthday",
   eslint: {
     ignoreDuringBuilds: true, // Consider setting to false for stricter production builds
   },
@@ -12,6 +12,6 @@ const nextConfig = {
   images: {
     unoptimized: true, // Required for static export
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;
