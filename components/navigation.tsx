@@ -10,7 +10,7 @@ export function Navigation() {
   const navItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/gallery", label: "Gallery", icon: Camera },
-    { href: "/peeeeeeeeeple", label: "Besties", icon: Camera },
+    { href: "/peeeeeeeeeple", label: "Besties", icon: Heart },
     { href: "/video", label: "Video", icon: Video },
   ];
 

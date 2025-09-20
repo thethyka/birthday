@@ -53,11 +53,24 @@ export default function HomePage() {
             showContent ? "animate-slide-up" : "opacity-0"
           }`}
           style={{ animationDelay: "0.3s" }}
-        >
-        </Card>
+        ></Card>
 
         {/* Birthday Countdown or Age Celebration */}
-        </div>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center text-gray-600">
+          <p className="inline-flex items-center gap-2">
+            <span>Made with</span>
+            <Heart className="text-pink-500" size={16} />
+            <span>by</span>
+            <span className="font-semibold">Filip</span>
+            <span>•</span>
+            <span className="font-semibold">Vyv</span>
+            <span>•</span>
+            <span className="font-semibold">Karam</span>
+          </p>
+        </footer>
+      </div>
     </div>
   );
 }
