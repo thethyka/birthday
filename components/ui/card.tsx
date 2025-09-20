@@ -76,4 +76,35 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+interface PersonCardProps {
+  name: string;
+  message: string;
+  photoUrl?: string; // optional
+}
+
+const PersonCard: React.FC<PersonCardProps> = ({ name, message, photoUrl }) => {
+  return (
+    <div className="w-64 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col items-center p-4">
+      {/* Name at the top */}
+      <h2 className="text-lg font-semibold text-gray-800 mb-3">{name}</h2>
+
+      {/* Photo in the middle */}
+      <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden mb-3">
+        {photoUrl ? (
+          <img
+            src={photoUrl}
+            alt={name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="text-gray-400">No Photo</span>
+        )}
+      </div>
+
+      {/* Message at the bottom */}
+      <p className="text-sm text-gray-600 text-center">{message}</p>
+    </div>
+  );
+};
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, PersonCard }
