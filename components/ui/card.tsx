@@ -90,22 +90,23 @@ interface PersonCardProps {
 
 const PersonCard: React.FC<PersonCardProps> = ({ name, photoUrl, message }) => {
   return (
-    <div className="w-96 h-[28rem] bg-white shadow-lg rounded-xl overflow-hidden p-6 flex flex-col">
+    // ~30% larger than original (original w-96 = 24rem, now ~31rem; height 28rem -> 36rem)
+    <div className="w-[31rem] max-w-full h-[36rem] bg-white shadow-lg rounded-xl overflow-hidden p-7 flex flex-col">
       {/* Name */}
-      <h2 className="text-2xl font-bold mb-4 text-center">{name}</h2>
+      <h2 className="text-3xl font-bold mb-5 text-center">{name}</h2>
 
       {/* Photo */}
       {photoUrl && (
         <img
           src={photoUrl}
           alt={name}
-          className="w-48 h-48 object-cover rounded-full mx-auto mb-4"
+          className="w-60 h-60 object-cover rounded-full mx-auto mb-5"
         />
       )}
 
       {/* Message */}
       {message && (
-        <div className="flex-1 overflow-y-auto text-gray-800 text-base">
+        <div className="flex-1 overflow-y-auto text-gray-800 text-lg leading-relaxed pr-1 whitespace-pre-line">
           {message}
         </div>
       )}

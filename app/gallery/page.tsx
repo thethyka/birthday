@@ -32,8 +32,8 @@ export default function GalleryPage() {
           setPhotos(
             arr.map((file, idx) => ({
               src: `/groupImages/${file}`,
-              title: `Memory ${idx + 1}`,
-              description: "A cherished birthday memory!",
+              title: "",
+              description: "",
             })),
           );
         }
