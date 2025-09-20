@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { BackgroundEffects } from "../../components/background-effects"
-import { Heart, Star, Sparkles, Gift } from "lucide-react"
+import { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { BackgroundEffects } from "../../components/background-effects";
+import { Heart, Star, Sparkles, Gift } from "lucide-react";
 
 export default function MemoriesPage() {
-  const [showContent, setShowContent] = useState(false)
+  const [showContent, setShowContent] = useState(false);
 
   const memories = [
     {
@@ -51,7 +51,7 @@ export default function MemoriesPage() {
       icon: "🌟",
       color: "indigo",
     },
-  ]
+  ];
 
   const birthdayWishes = [
     "May this new year bring you endless joy and beautiful surprises! 🎉",
@@ -59,12 +59,12 @@ export default function MemoriesPage() {
     "May all your dreams come true and your heart be filled with happiness! 💝",
     "Wishing you love, laughter, and everything your heart desires! 💕",
     "May this birthday be the beginning of your best year yet! 🌟",
-  ]
+  ];
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 300)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setShowContent(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const getColorClasses = (color: string) => {
     const colors = {
@@ -74,9 +74,9 @@ export default function MemoriesPage() {
       purple: "border-purple-200 bg-purple-50",
       blue: "border-blue-200 bg-blue-50",
       indigo: "border-indigo-200 bg-indigo-50",
-    }
-    return colors[color as keyof typeof colors] || colors.pink
-  }
+    };
+    return colors[color as keyof typeof colors] || colors.pink;
+  };
 
   return (
     <div className="min-h-screen pt-16 relative overflow-hidden">
@@ -84,10 +84,18 @@ export default function MemoriesPage() {
 
       <div className="container mx-auto px-4 py-12 relative z-10">
         {/* Header */}
-        <div className={`text-center mb-12 ${showContent ? "animate-bounce-in" : "opacity-0"}`}>
-          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">Sweet Memories 💝</h1>
+        <div
+          className={`text-center mb-12 ${
+            showContent ? "animate-bounce-in" : "opacity-0"
+          }`}
+        >
+          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">
+            Sweet Memories 💝
+          </h1>
           <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
-            {"A collection of thoughts, wishes, and all the reasons why you're absolutely amazing!"}
+            {
+              "A collection of thoughts, wishes, and all the reasons why you're absolutely amazing!"
+            }
           </p>
         </div>
 
@@ -96,17 +104,21 @@ export default function MemoriesPage() {
           {memories.map((memory, index) => (
             <Card
               key={index}
-              className={`card-hover glass-effect border-2 ${getColorClasses(memory.color)} ${
-                showContent ? "animate-slide-up" : "opacity-0"
-              }`}
+              className={`card-hover glass-effect border-2 ${getColorClasses(
+                memory.color
+              )} ${showContent ? "animate-slide-up" : "opacity-0"}`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <CardContent className="p-6">
                 <div className="text-center mb-4">
                   <div className="text-4xl mb-2">{memory.icon}</div>
-                  <h3 className="text-xl font-bold text-purple-600">{memory.title}</h3>
+                  <h3 className="text-xl font-bold text-purple-600">
+                    {memory.title}
+                  </h3>
                 </div>
-                <p className="text-gray-700 leading-relaxed text-center">{memory.content}</p>
+                <p className="text-gray-700 leading-relaxed text-center">
+                  {memory.content}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -115,7 +127,9 @@ export default function MemoriesPage() {
         {/* Birthday Wishes */}
         <div className="mb-16">
           <h2
-            className={`text-4xl font-bold text-center text-purple-600 mb-8 ${showContent ? "animate-slide-up" : "opacity-0"}`}
+            className={`text-4xl font-bold text-center text-purple-600 mb-8 ${
+              showContent ? "animate-slide-up" : "opacity-0"
+            }`}
             style={{ animationDelay: "0.8s" }}
           >
             Birthday Wishes 🎂
@@ -131,7 +145,9 @@ export default function MemoriesPage() {
                 style={{ animationDelay: `${1 + index * 0.1}s` }}
               >
                 <CardContent className="p-6 text-center">
-                  <div className="text-3xl mb-3">{["🎉", "✨", "💝", "💕", "🌟"][index]}</div>
+                  <div className="text-3xl mb-3">
+                    {["🎉", "✨", "💝", "💕", "🌟"][index]}
+                  </div>
                   <p className="text-gray-700 font-medium text-lg">{wish}</p>
                 </CardContent>
               </Card>
@@ -141,17 +157,24 @@ export default function MemoriesPage() {
 
         {/* Final Message */}
         <Card
-          className={`max-w-4xl mx-auto glass-effect border-2 border-pink-300 ${showContent ? "animate-slide-up" : "opacity-0"}`}
+          className={`max-w-4xl mx-auto glass-effect border-2 border-pink-300 ${
+            showContent ? "animate-slide-up" : "opacity-0"
+          }`}
           style={{ animationDelay: "1.5s" }}
         >
           <CardContent className="p-8 md:p-12 text-center bg-gradient-animated">
-            <Gift className="mx-auto text-white mb-6 animate-bounce" size={64} />
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">The Greatest Gift</h3>
+            <Gift
+              className="mx-auto text-white mb-6 animate-bounce"
+              size={64}
+            />
+            <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              The Greatest Gift
+            </h3>
             <p className="text-white text-lg md:text-xl leading-relaxed mb-6">
               {`The greatest gift isn't something that can be wrapped or bought - it's having someone like you 
               in our lives. Your presence is a present, your friendship is a treasure, and your birthday is 
               a celebration of all the joy you bring to this world. Thank you for being exactly who you are, 
-              "Insert Name". You are loved, appreciated, and celebrated today and always!`}
+              Sashah. You are loved, appreciated, and celebrated today and always!`}
             </p>
             <div className="flex justify-center items-center gap-4 text-4xl">
               <Heart className="text-red-300 animate-pulse" size={32} />
@@ -164,5 +187,5 @@ export default function MemoriesPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

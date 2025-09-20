@@ -6,17 +6,19 @@ A beautiful, dynamic multi-page birthday celebration website built with **Next.j
 
 ## ✏️ Personalize the Website
 
-Before sharing or deploying, make sure to replace all instances of "Insert Name" in the project files with your friend's name to personalize the experience.
+Before sharing or deploying, make sure to replace all instances of Sashah in the project files with your friend's name to personalize the experience.
 
 ---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** 18.0 or higher
 - **npm** or **Yarn**
 
 ### Installation & Setup
+
 1. **Clone or extract the project**
 2. **Navigate to the project folder:**
    ```bash
@@ -69,11 +71,13 @@ birthday-website/
 ---
 
 ## 🎵 Add Your Music
+
 - Convert your file to `.mp3` and name it `birthday-song.mp3`.
 - Place it inside the `public/` folder.
 - Update the music logic in `components/music-provider.tsx` if needed.
 
 ## 📸 Add Your Photos
+
 - Place your images in `public/images/`.
 - Recommended formats: `.jpg`, `.png`, or `.webp`.
 - Update the array in `app/gallery/page.tsx`:
@@ -90,6 +94,7 @@ const photos = [
 ```
 
 ## 🎬 Add Your Video
+
 - Convert your video to `.mp4` or `.webm`.
 - Place it in `public/videos/`.
 - Replace the placeholder in `app/video/page.tsx`:
@@ -132,6 +137,7 @@ npm run lint    # Lint the code
 ---
 
 ## 📱 Browser Compatibility
+
 - ✅ Chrome
 - ✅ Firefox
 - ✅ Safari
@@ -144,21 +150,25 @@ npm run lint    # Lint the code
 ## 🧩 Troubleshooting
 
 ### "Module not found" errors
+
 ```bash
 rm -rf node_modules package-lock.json
 npm install
 ```
 
 ### Port 3000 in use
+
 ```bash
 npm run dev -- -p 3001
 ```
 
 ### Music not auto-playing
+
 - Most browsers block autoplay; users can click the play button
 - Playback begins after first interaction
 
 ### Images not showing?
+
 - Ensure files are in `public/images/`
 - File names and extensions must match (case-sensitive)
 
@@ -183,6 +193,7 @@ npm run dev -- -p 3001
 ---
 
 ## 💡 Enhancement Ideas
+
 - Add a guest book (comments or messages)
 - Implement a countdown timer
 - Include birthday quizzes or trivia
