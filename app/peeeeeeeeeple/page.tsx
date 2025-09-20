@@ -8,11 +8,21 @@ import { ChevronLeft, ChevronRight, Heart } from "lucide-react"
 
 export default function GalleryPage() {
   const [showContent, setShowContent] = useState(false)
- 
+  
   const people = [
-    { name: "John Doe", message: "This is a placeholder message for John Doe.", photoUrl: "/images/dummy1.jpg" },
-    { name: "Jane Smith", message: "This is a placeholder message for Jane Smith.", photoUrl: "/images/dummy2.jpg" },
-    { name: "Alice Johnson", message: "This is a placeholder message for Alice Johnson.", photoUrl: "/images/dummy3.jpg" },
+    { name: "Angie", message: "Happy Birthday! You're amazing!", photoUrl: "/people/Angie/IMG_7196.JPG" },
+    { name: "Bianca", message: "Wishing you the happiest of birthdays!", photoUrl: undefined },
+    { name: "Bryce", message: "Hope your special day is wonderful!", photoUrl: "/people/Bryce/IMG_7198.JPG" },
+    { name: "Caitlin", message: "Have the most fantastic birthday!", photoUrl: "/people/Caitlin/IMG_7201.JPG" },
+    { name: "Cate", message: "Celebrating you today and always!", photoUrl: "/people/Cate/IMG_7188.JPG" },
+    { name: "Ellie", message: "You deserve all the joy on your birthday!", photoUrl: "/people/Ellie/IMG_7186.JPG" },
+    { name: "Karam", message: "Sending you birthday wishes and love!", photoUrl: undefined },
+    { name: "Karan", message: "Hope your birthday is as special as you are!", photoUrl: undefined },
+    { name: "Kayden", message: "Have an incredible birthday celebration!", photoUrl: "/people/Kayden/IMG_7205.JPG" },
+    { name: "Luis", message: "Wishing you happiness on your special day!", photoUrl: undefined },
+    { name: "Nathan", message: "Hope your birthday is filled with fun!", photoUrl: "/people/Nathan/IMG_7194.JPG" },
+    { name: "Riva", message: "Celebrating another year of your awesomeness!", photoUrl: undefined },
+    { name: "Robyn", message: "Have the best birthday ever!", photoUrl: "/people/Robyn/IMG_7199.JPG" },
   ]
 
   useEffect(() => {
