@@ -19,7 +19,7 @@ export default function GalleryPage() {
     async function load() {
       try {
         // Use basePath aware fetch (Next will rewrite appropriately). We include cache-busting param for randomness if needed.
-        const res = await fetch(`/gallery-images.json`);
+        const res = await fetch(`/birthday/gallery-images.json`);
         if (!res.ok) throw new Error(`Failed to load gallery-images.json: ${res.status}`);
         const files: string[] = await res.json();
         // Shuffle
@@ -31,7 +31,7 @@ export default function GalleryPage() {
         if (!cancelled) {
           setPhotos(
             arr.map((file, idx) => ({
-              src: `/groupImages/${file}`,
+              src: `/birthday/groupImages/${file}`,
               title: "",
               description: "",
             })),
