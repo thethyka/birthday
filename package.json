@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "next start",
-    "lint": "next lint",
+    "start": "npx next start",
+    "lint": "npx next lint",
     "generate:people": "node scripts/generatePeopleData.js",
-    "dev": "npm run generate:people && next dev",
-    "build": "npm run generate:people && next build"
+    "dev": "npm run generate:people && npx next dev",
+    "build": "npm run generate:people && npx next build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
