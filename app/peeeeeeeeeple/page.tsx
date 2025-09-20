@@ -59,32 +59,34 @@ export default function GalleryPage() {
           </p>
         </div>
 
-        {/* Single Person Card */}
-        {currentPerson && (
-          <div className="relative w-full max-w-md mx-auto">
-            <PersonCard
-              key={currentPerson.name}
-              name={currentPerson.name}
-              message={currentPerson.message}
-              photoUrl={currentPerson.photoUrl}
-            />
+        {/* Single Person Card (centered) */}
+        <div className="flex-1 flex items-center justify-center">
+          {currentPerson && (
+            <div className="relative w-full max-w-md">
+              <PersonCard
+                key={currentPerson.name}
+                name={currentPerson.name}
+                message={currentPerson.message}
+                photoUrl={currentPerson.photoUrl}
+              />
 
-            {/* Navigation Buttons */}
-            <button
-              onClick={goPrev}
-              className="absolute top-1/2 -left-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
-            >
-              <ChevronLeft size={28} />
-            </button>
+              {/* Navigation Buttons */}
+              <button
+                onClick={goPrev}
+                className="absolute top-1/2 -left-12 -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
+              >
+                <ChevronLeft size={28} />
+              </button>
 
-            <button
-              onClick={goNext}
-              className="absolute top-1/2 -right-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
-            >
-              <ChevronRight size={28} />
-            </button>
-          </div>
-        )}
+              <button
+                onClick={goNext}
+                className="absolute top-1/2 -right-12 -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
+              >
+                <ChevronRight size={28} />
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Footer / Index */}
         {people.length > 0 && (
