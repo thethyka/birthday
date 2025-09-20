@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/birthday",
   images: {
     domains: ["localhost"],
     unoptimized: false, // Set to false for production optimization

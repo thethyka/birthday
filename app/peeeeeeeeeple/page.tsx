@@ -27,7 +27,7 @@ export default function GalleryPage() {
 
   // Fetch people.json
   useEffect(() => {
-    fetch("/birthday/people.json")
+    fetch("/people.json")
       .then((res) => res.json())
       .then((data) => setPeople(data));
   }, []);
@@ -62,7 +62,7 @@ export default function GalleryPage() {
               key={currentPerson.name}
               name={currentPerson.name}
               message={currentPerson.message}
-              photoUrl={`/birthday/${currentPerson.photoUrl}`}
+              photoUrl={currentPerson.photoUrl}
 
             />
 

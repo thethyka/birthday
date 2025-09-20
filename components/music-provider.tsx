@@ -77,7 +77,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         }}
       >
         {/* Ensure correct path on GitHub Pages (basePath = /birthday). */}
-        <source src="/birthday/birthday-song.mp3" type="audio/mpeg" />
+        <source src="/birthday-song.mp3" type="audio/mpeg" />
       </audio>
 
       {showPrompt && (
