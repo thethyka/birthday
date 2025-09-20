@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
+    "start": "next start",
     "lint": "next lint",
-    "start": "next start"
+    "generate:people": "ts-node-esm scripts/generatePeopleData.js",
+    "dev": "npm run generate:people && next dev",
+    "build": "npm run generate:people && next build"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -61,11 +62,12 @@
     "zod": "^4.1.9"
   },
   "devDependencies": {
-    "@types/node": "^24",
+    "@types/node": "^24.5.2",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.13",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
