@@ -1,6 +1,7 @@
 # 📁 Adding Your Media Files
 
 ## 🎵 Music File
+
 - **Location:** `public/birthday-song.mp3`
 - **Format:** MP3 (recommended)
 - **Size:** Under 10MB for faster loading
@@ -9,6 +10,7 @@
 ---
 
 ## 📸 Photos for Gallery
+
 - **Location:** `public/images/`
 - **Naming:** `photo1.jpg`, `photo2.jpg`, `photo3.jpg`, etc.
 - **Format:** JPG, PNG, or WebP
@@ -16,6 +18,7 @@
 - **Quantity:** 7-8 photos recommended
 
 ### Update Photo Information
+
 Edit `app/gallery/page.tsx` and update this array:
 
 ```javascript
@@ -26,28 +29,30 @@ const photos = [
     description: "Your custom description! ✨",
   },
   {
-    src: "/images/photo2.jpg", 
+    src: "/images/photo2.jpg",
     title: "Adventure Time",
     description: "Another custom description! 🌟",
   },
   // Add more photos...
-]
+];
 ```
 
 ---
 
 ## 🎬 Video File
+
 - **Location:** `public/videos/your-video.mp4`
 - **Format:** MP4 (recommended) or WebM
 - **Size:** Under 50MB recommended
 - **Resolution:** 1080p or lower
 
 ### Update Video Player
+
 Edit `app/video/page.tsx` and replace the placeholder with:
 
 ```jsx
-<video 
-  controls 
+<video
+  controls
   className="w-full h-auto rounded-lg"
   poster="/images/video-thumbnail.jpg"
 >
@@ -59,11 +64,13 @@ Edit `app/video/page.tsx` and replace the placeholder with:
 ---
 
 ## 🔄 After Adding Files
+
 The website will automatically refresh and show your new content!
 
 ---
 
 ## 💡 Pro Tips
+
 - Compress large images before adding them
 - Test the website on mobile devices
 - Make sure file names match exactly (case-sensitive)

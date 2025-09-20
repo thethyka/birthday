@@ -11,9 +11,16 @@ type Person = {
   photoUrl?: string;
 };
 
-export default function GalleryPage() {
+export default function PeopleCarouselPage() {
   const [people, setPeople] = useState<Person[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [showContent, setShowContent] = useState(false);
+
+  // Animate header
+  useEffect(() => {
+    const timer = setTimeout(() => setShowContent(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Fetch people.json
   useEffect(() => {
@@ -21,6 +28,8 @@ export default function GalleryPage() {
       .then((res) => res.json())
       .then((data) => setPeople(data));
   }, []);
+
+  const currentPerson = people[currentIndex];
 
   // Navigation handlers
   const goPrev = () => {
@@ -31,57 +40,64 @@ export default function GalleryPage() {
     setCurrentIndex((prev) => (prev < people.length - 1 ? prev + 1 : 0));
   };
 
-  const currentPerson = people[currentIndex];
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative">
+    <div className="min-h-screen pt-16 relative">
       <BackgroundEffects />
 
-      {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-2">
-          Peeeeeeeeeple
-        </h1>
-        <p className="text-gray-600 max-w-md mx-auto">
-          A collection of beautiful peeeeeeeeeple that adore your amazing spirit!
-        </p>
-      </div>
-
-      {/* Carousel Container */}
-      {currentPerson && (
-        <div className="relative flex items-center">
-          {/* Left Button */}
-          <button
-            onClick={goPrev}
-            className="absolute left-[-50px] p-2 bg-white rounded-full shadow hover:bg-gray-100"
-          >
-            <ChevronLeft size={28} />
-          </button>
-
-          {/* Person Card */}
-          <PersonCard
-            key={currentPerson.name}
-            name={currentPerson.name}
-            message={currentPerson.message}
-            photoUrl={currentPerson.photoUrl}
-          />
-
-          {/* Right Button */}
-          <button
-            onClick={goNext}
-            className="absolute right-[-50px] p-2 bg-white rounded-full shadow hover:bg-gray-100"
-          >
-            <ChevronRight size={28} />
-          </button>
+      <div className="container mx-auto px-4 py-12 relative z-10 h-[calc(100vh-4rem)] flex flex-col">
+        {/* Header */}
+        <div
+          className={`text-center mb-6 ${showContent ? "animate-bounce-in" : "opacity-0"}`}
+        >
+          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">
+            Peeeeeeeeeple
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+            A collection of beautiful peeeeeeeeeple that adore your amazing
+            spirit!
+          </p>
         </div>
-      )}
 
-      {/* Footer / index */}
-      {people.length > 0 && (
-        <p className="mt-6 text-gray-600">
-          {currentIndex + 1} / {people.length}
-        </p>
-      )}
+        {/* Carousel */}
+        <div className="flex-1 flex items-center justify-center relative">
+          {currentPerson && (
+            <>
+              {/* Left Button */}
+              <button
+                onClick={goPrev}
+                className="absolute left-0 p-3 bg-white rounded-full shadow hover:bg-gray-100 -translate-x-1/2"
+              >
+                <ChevronLeft size={32} />
+              </button>
+
+              {/* Card Container: limit height to 80% of carousel area */}
+              <div className="max-h-[80%] aspect-square">
+                <PersonCard
+                  key={currentPerson.name}
+                  name={currentPerson.name}
+                  message={currentPerson.message}
+                  photoUrl={currentPerson.photoUrl}
+                />
+              </div>
+
+              {/* Right Button */}
+              <button
+                onClick={goNext}
+                className="absolute right-0 p-3 bg-white rounded-full shadow hover:bg-gray-100 translate-x-1/2"
+              >
+                <ChevronRight size={32} />
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Footer / Index */}
+        {people.length > 0 && (
+          <p className="mt-6 text-gray-600 text-center">
+            {currentIndex + 1} / {people.length}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

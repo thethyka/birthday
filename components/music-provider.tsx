@@ -1,62 +1,77 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef, createContext, useContext, type ReactNode } from "react"
-import { Button } from "@/components/ui/button"
-import { Play, Pause, Volume2, VolumeX, Music } from "lucide-react"
+import {
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  useContext,
+  type ReactNode,
+} from "react";
+import { Button } from "@/components/ui/button";
+import { Play, Pause, Volume2, VolumeX, Music } from "lucide-react";
 
 interface MusicContextType {
-  isPlaying: boolean
-  isMuted: boolean
-  toggleMusic: () => void
-  toggleMute: () => void
+  isPlaying: boolean;
+  isMuted: boolean;
+  toggleMusic: () => void;
+  toggleMute: () => void;
 }
 
-const MusicContext = createContext<MusicContextType | undefined>(undefined)
+const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
 export function MusicProvider({ children }: { children: ReactNode }) {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const [showControls, setShowControls] = useState(false)
-  const [showPrompt, setShowPrompt] = useState(true)
-  const audioRef = useRef<HTMLAudioElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showControls, setShowControls] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(true);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     if (!showPrompt) {
       if (audioRef.current) {
         audioRef.current.play().catch(() => {
-          console.log("Autoplay prevented by browser")
-        })
-        setIsPlaying(true)
-        setShowControls(true)
+          console.log("Autoplay prevented by browser");
+        });
+        setIsPlaying(true);
+        setShowControls(true);
       }
     }
-  }, [showPrompt])
+  }, [showPrompt]);
 
   const handleStart = () => {
-    setShowPrompt(false)
-  }
+    setShowPrompt(false);
+  };
 
   const toggleMusic = () => {
     if (audioRef.current) {
       if (isPlaying) {
-        audioRef.current.pause()
+        audioRef.current.pause();
       } else {
-        audioRef.current.play()
+        audioRef.current.play();
       }
-      setIsPlaying(!isPlaying)
+      setIsPlaying(!isPlaying);
     }
-  }
+  };
 
   const toggleMute = () => {
     if (audioRef.current) {
-      audioRef.current.muted = !isMuted
-      setIsMuted(!isMuted)
+      audioRef.current.muted = !isMuted;
+      setIsMuted(!isMuted);
     }
-  }
+  };
 
   return (
-    <MusicContext.Provider value={{ isPlaying, isMuted, toggleMusic, toggleMute }}>
-      <audio ref={audioRef} loop preload="auto" onPlay={() => setIsPlaying(true)} onPause={() => setIsPlaying(false)}>
+    <MusicContext.Provider
+      value={{ isPlaying, isMuted, toggleMusic, toggleMute }}
+    >
+      <audio
+        ref={audioRef}
+        loop
+        preload="auto"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      >
         <source src="/birthday-song.mp3" type="audio/mpeg" />
       </audio>
 
@@ -64,9 +79,17 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-xs text-center border-4 border-pink-200 animate-bounce-in">
             <div className="text-5xl mb-4">🎉🎂✨</div>
-            <h2 className="text-2xl font-bold text-purple-600 mb-2">Ready to Celebrate?</h2>
-            <p className="text-lg text-gray-700 mb-6">Click below to start the party and play your birthday song! 🥳</p>
-            <Button className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-6 py-3 rounded-full text-lg shadow-lg hover:scale-105 transition-transform" onClick={handleStart} autoFocus>
+            <h2 className="text-2xl font-bold text-purple-600 mb-2">
+              Ready to Celebrate?
+            </h2>
+            <p className="text-lg text-gray-700 mb-6">
+              Click below to start the party and play your birthday song! 🥳
+            </p>
+            <Button
+              className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-6 py-3 rounded-full text-lg shadow-lg hover:scale-105 transition-transform"
+              onClick={handleStart}
+              autoFocus
+            >
               Start the Party!
             </Button>
           </div>
@@ -97,13 +120,13 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
       {children}
     </MusicContext.Provider>
-  )
+  );
 }
 
 export function useMusic() {
-  const context = useContext(MusicContext)
+  const context = useContext(MusicContext);
   if (context === undefined) {
-    throw new Error("useMusic must be used within a MusicProvider")
+    throw new Error("useMusic must be used within a MusicProvider");
   }
-  return context
+  return context;
 }

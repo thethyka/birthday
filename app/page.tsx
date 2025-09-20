@@ -112,7 +112,6 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </Link>
-
         </div>
 
         {/* Birthday Countdown or Age Celebration */}
