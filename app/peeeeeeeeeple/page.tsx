@@ -1,60 +1,96 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, PersonCard } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { BackgroundEffects } from "../../components/background-effects"
-import { ChevronLeft, ChevronRight, Heart } from "lucide-react"
+import { useState, useEffect } from "react";
+import { PersonCard } from "@/components/ui/card";
+import { BackgroundEffects } from "../../components/background-effects";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+type Person = {
+  name: string;
+  message: string;
+  photoUrl?: string;
+};
 
 export default function GalleryPage() {
-  const [showContent, setShowContent] = useState(false)
-  
-  const people = [
-    { name: "Angie", message: "Happy Birthday! You're amazing!", photoUrl: "/people/Angie/IMG_7196.JPG" },
-    { name: "Bianca", message: "Wishing you the happiest of birthdays!", photoUrl: undefined },
-    { name: "Bryce", message: "Hope your special day is wonderful!", photoUrl: "/people/Bryce/IMG_7198.JPG" },
-    { name: "Caitlin", message: "Have the most fantastic birthday!", photoUrl: "/people/Caitlin/IMG_7201.JPG" },
-    { name: "Cate", message: "Celebrating you today and always!", photoUrl: "/people/Cate/IMG_7188.JPG" },
-    { name: "Ellie", message: "You deserve all the joy on your birthday!", photoUrl: "/people/Ellie/IMG_7186.JPG" },
-    { name: "Karam", message: "Sending you birthday wishes and love!", photoUrl: undefined },
-    { name: "Karan", message: "Hope your birthday is as special as you are!", photoUrl: undefined },
-    { name: "Kayden", message: "Have an incredible birthday celebration!", photoUrl: "/people/Kayden/IMG_7205.JPG" },
-    { name: "Luis", message: "Wishing you happiness on your special day!", photoUrl: undefined },
-    { name: "Nathan", message: "Hope your birthday is filled with fun!", photoUrl: "/people/Nathan/IMG_7194.JPG" },
-    { name: "Riva", message: "Celebrating another year of your awesomeness!", photoUrl: undefined },
-    { name: "Robyn", message: "Have the best birthday ever!", photoUrl: "/people/Robyn/IMG_7199.JPG" },
-  ]
+  const [showContent, setShowContent] = useState(false);
+  const [people, setPeople] = useState<Person[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Animate header
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 300)
-    return () => clearTimeout(timer)
-  }, [])
+    const timer = setTimeout(() => setShowContent(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Fetch people.json
+  useEffect(() => {
+    fetch("/people.json")
+      .then((res) => res.json())
+      .then((data) => setPeople(data));
+  }, []);
+
+  // Handle navigation
+  const goPrev = () => {
+    setCurrentIndex((prev) => (prev > 0 ? prev - 1 : people.length - 1));
+  };
+
+  const goNext = () => {
+    setCurrentIndex((prev) => (prev < people.length - 1 ? prev + 1 : 0));
+  };
+
+  const currentPerson = people[currentIndex];
 
   return (
-    <div className="min-h-screen pt-16 relative overflow-hidden">
+    <div className="min-h-screen pt-16 relative overflow-hidden flex flex-col items-center">
       <BackgroundEffects />
 
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        {/* Header */}
-        <div className={`text-center mb-12 ${showContent ? "animate-bounce-in" : "opacity-0"}`}>
-          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">Peeeeeeeeeple</h1>
-          <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
-            {"A collection of beautiful peeeeeeeeeple that adore your amazing spirit!"}
-          </p>
-        </div>
-
-        {/* People Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {people.map((person) => (
-            <PersonCard
-              key={person.name}
-              name={person.name}
-              message={person.message}
-              photoUrl={person.photoUrl}
-            />
-          ))}
-        </div>
+      {/* Header */}
+      <div
+        className={`text-center mb-12 ${
+          showContent ? "animate-bounce-in" : "opacity-0"
+        }`}
+      >
+        <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">
+          Peeeeeeeeeple
+        </h1>
+        <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto">
+          A collection of beautiful peeeeeeeeeple that adore your amazing spirit!
+        </p>
       </div>
+
+      {/* Single Person Card */}
+      {currentPerson && (
+        <div className="relative w-full max-w-md">
+          <PersonCard
+            key={currentPerson.name}
+            name={currentPerson.name}
+            message={currentPerson.message}
+            photoUrl={currentPerson.photoUrl}
+          />
+
+          {/* Navigation Buttons */}
+          <button
+            onClick={goPrev}
+            className="absolute top-1/2 -left-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
+          >
+            <ChevronLeft size={28} />
+          </button>
+
+          <button
+            onClick={goNext}
+            className="absolute top-1/2 -right-12 transform -translate-y-1/2 p-2 rounded-full bg-white shadow hover:bg-gray-100"
+          >
+            <ChevronRight size={28} />
+          </button>
+        </div>
+      )}
+
+      {/* Footer: Index */}
+      {people.length > 0 && (
+        <p className="mt-6 text-gray-600">
+          {currentIndex + 1} / {people.length}
+        </p>
+      )}
     </div>
-  )
+  );
 }
