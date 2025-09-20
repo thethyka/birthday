@@ -71,8 +71,13 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onError={(e) => {
+          const el = e.currentTarget as HTMLAudioElement;
+          console.warn("Failed to load birthday song. Tried src:", el.currentSrc);
+        }}
       >
-        <source src="/birthday-song.mp3" type="audio/mpeg" />
+        {/* Ensure correct path on GitHub Pages (basePath = /birthday). */}
+        <source src="/birthday/birthday-song.mp3" type="audio/mpeg" />
       </audio>
 
       {showPrompt && (
