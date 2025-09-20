@@ -12,7 +12,6 @@ export function Navigation() {
     { href: "/gallery", label: "Gallery", icon: Camera },
     { href: "/peeeeeeeeeple", label: "Peeeeeeeeeple", icon: Camera },
     { href: "/video", label: "Video", icon: Video },
-    { href: "/memories", label: "Memories", icon: Heart },
   ];
 
   return (

@@ -113,25 +113,6 @@ export default function HomePage() {
             </Card>
           </Link>
 
-          <Link href="/memories">
-            <Card
-              className={`card-hover glass-effect border-2 border-yellow-200 h-full ${
-                showContent ? "animate-slide-up" : "opacity-0"
-              }`}
-              style={{ animationDelay: "1s" }}
-            >
-              <CardContent className="p-8 text-center h-full flex flex-col justify-center">
-                <div className="text-6xl mb-4">💝</div>
-                <h4 className="text-2xl font-bold text-purple-600 mb-4">
-                  Sweet Memories
-                </h4>
-                <p className="text-gray-600 mb-4">
-                  Stories and wishes from the heart
-                </p>
-                <ArrowRight className="mx-auto text-yellow-500" size={24} />
-              </CardContent>
-            </Card>
-          </Link>
         </div>
 
         {/* Birthday Countdown or Age Celebration */}
