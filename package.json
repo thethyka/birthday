@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run generate:people && next build",
-    "dev": "npm run generate:people && next dev",
+  "build": "npm run generate:people && npm run generate:gallery && next build",
+  "dev": "npm run generate:people && npm run generate:gallery && next dev",
     "generate:people": "node scripts/generatePeopleData.js",
+  "generate:gallery": "node scripts/generateGalleryImages.js",
     "lint": "next lint",
     "start": "next start"
   },
