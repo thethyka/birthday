@@ -62,7 +62,7 @@ export default function GalleryPage() {
               key={currentPerson.name}
               name={currentPerson.name}
               message={currentPerson.message}
-              photoUrl={`/birthday/${currentPerson.photoUrl}`}
+              photoUrl={currentPerson.photoUrl}
             />
 
             {/* Navigation Buttons */}
