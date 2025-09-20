@@ -53,7 +53,6 @@ birthday-website/
 │   ├── gallery/          # Photo gallery
 │   ├── peeeeeeeeeple/    # Peeeeeeeeeple
 │   ├── video/            # Video section
-│   ├── memories/         # Birthday wishes
 │   └── globals.css       # Global styles
 ├── components/           # Reusable components
 │   ├── navigation.tsx    # Navbar
@@ -113,7 +112,6 @@ const photos = [
 
 - **Personal Messages**
   - Home: `app/page.tsx`
-  - Wishes: `app/memories/page.tsx`
   - Photo captions: `app/gallery/page.tsx`
 - **Theme & Styling**
   - Global styles: `app/globals.css`
