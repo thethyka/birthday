@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
   eslint: {
     ignoreDuringBuilds: true, // Consider setting to false for stricter production builds
   },
@@ -7,7 +9,7 @@ const nextConfig = {
     ignoreBuildErrors: false, // Set to false to ensure type safety in production
   },
   images: {
-    unoptimized: false, // Set to false for production optimization
+    unoptimized: true, // Required for static export
   },
 }
 
