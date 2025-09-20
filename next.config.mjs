@@ -2,6 +2,7 @@
 const nextConfig = {
   output: 'export',
   trailingSlash: true,
+  basePath: '/birthday',
   eslint: {
     ignoreDuringBuilds: true, // Consider setting to false for stricter production builds
   },
