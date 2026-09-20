@@ -1,195 +1,176 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { BackgroundEffects } from "../../components/background-effects";
-import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { BackgroundEffects } from "@/components/background-effects";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { copy } from "@/content/copy";
+import { LockedPage } from "@/components/locked-page";
 
-export default function GalleryPage() {
-  const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null);
+function GalleryPageInner() {
+  const [photos, setPhotos] = useState<string[]>([]);
+  const [selected, setSelected] = useState<number | null>(null);
   const [showContent, setShowContent] = useState(false);
-
-  const [photos, setPhotos] = useState<
-    { src: string; title: string; description: string }[]
-  >([]);
+  const touchStartX = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    async function load() {
-      try {
-        // Use basePath aware fetch (Next will rewrite appropriately). We include cache-busting param for randomness if needed.
-        const res = await fetch(`/gallery-images.json`);
-        if (!res.ok)
-          throw new Error(`Failed to load gallery-images.json: ${res.status}`);
-        const files: string[] = await res.json();
-        // Shuffle
+    fetch("/gallery-images.json")
+      .then((res) => res.json())
+      .then((files: string[]) => {
         const arr = [...files];
         for (let i = arr.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [arr[i], arr[j]] = [arr[j], arr[i]];
         }
-        if (!cancelled) {
-          setPhotos(
-            arr.map((file, idx) => ({
-              src: `/groupImages/${file}`,
-              title: "",
-              description: "",
-            }))
-          );
-        }
-      } catch (e) {
-        console.warn(e);
-      }
-    }
-    load();
+        if (!cancelled) setPhotos(arr.map((f) => `/groupImages/${f}`));
+      })
+      .catch((e) => console.warn(e));
     return () => {
       cancelled = true;
     };
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 300);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setShowContent(true), 250);
+    return () => clearTimeout(t);
   }, []);
 
-  const nextPhoto = () => {
-    if (selectedPhoto !== null) {
-      setSelectedPhoto((selectedPhoto + 1) % photos.length);
-    }
-  };
+  const next = useCallback(
+    () => setSelected((s) => (s === null ? s : (s + 1) % photos.length)),
+    [photos.length]
+  );
+  const prev = useCallback(
+    () =>
+      setSelected((s) =>
+        s === null ? s : s === 0 ? photos.length - 1 : s - 1
+      ),
+    [photos.length]
+  );
 
-  const prevPhoto = () => {
-    if (selectedPhoto !== null) {
-      setSelectedPhoto(
-        selectedPhoto === 0 ? photos.length - 1 : selectedPhoto - 1
-      );
+  // Keyboard controls for the lightbox — Esc especially, which the old
+  // version had no handler for at all.
+  useEffect(() => {
+    if (selected === null) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setSelected(null);
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
     }
-  };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected, next, prev]);
+
+  // Lock background scroll while the lightbox is open.
+  useEffect(() => {
+    if (selected === null) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [selected]);
+
+  function onTouchEnd(e: React.TouchEvent) {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(dx) > 50) (dx < 0 ? next : prev)();
+    touchStartX.current = null;
+  }
 
   return (
     <div className="min-h-screen pt-16 relative overflow-hidden">
       <BackgroundEffects />
 
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        {/* Header */}
+      <div className="container mx-auto px-4 py-10 relative z-10">
         <div
-          className={`text-center mb-12 ${showContent ? "animate-bounce-in" : "opacity-0"}`}
+          className={`text-center mb-10 ${showContent ? "animate-bounce-in" : "opacity-0"}`}
         >
-          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">
-            Photo Gallery 📸
+          <h1 className="text-4xl sm:text-6xl font-bold text-gradient mb-3">
+            {copy.galleryTitle}
           </h1>
+          <p className="text-sm text-muted">{photos.length} photos</p>
         </div>
 
-        {/* Photo Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {photos.map((photo, index) => (
-            <Card
-              key={index}
-              className={`card-hover glass-effect border-2 border-pink-200 cursor-pointer overflow-hidden ${
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+          {photos.map((src, index) => (
+            <button
+              key={src}
+              onClick={() => setSelected(index)}
+              className={`group relative rounded-xl overflow-hidden panel p-0 card-hover ${
                 showContent ? "animate-slide-up" : "opacity-0"
               }`}
-              style={{ animationDelay: `${index * 0.1}s` }}
-              onClick={() => setSelectedPhoto(index)}
+              style={{ animationDelay: `${Math.min(index * 0.04, 0.8)}s` }}
             >
-              <CardContent className="p-0">
-                <div className="relative group">
-                  <img
-                    src={photo.src || "/placeholder.svg"}
-                    alt={photo.title}
-                    className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-4 left-4 right-4 text-white">
-                      <h4 className="font-bold text-lg">{photo.title}</h4>
-                      <p className="text-sm opacity-90">{photo.description}</p>
-                    </div>
-                  </div>
-                  <Heart
-                    className="absolute top-4 right-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    size={24}
-                  />
-                </div>
-              </CardContent>
-            </Card>
+              <img
+                src={src}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="w-full h-40 sm:h-56 object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-plum/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            </button>
           ))}
         </div>
-
-        {/* Photo Modal */}
-        {selectedPhoto !== null && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="relative max-w-4xl w-full">
-              <Button
-                onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/30 text-white border-0 rounded-full w-12 h-12 p-0"
-              >
-                ✕
-              </Button>
-
-              <Button
-                onClick={prevPhoto}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white border-0 rounded-full w-12 h-12 p-0"
-              >
-                <ChevronLeft size={24} />
-              </Button>
-
-              <Button
-                onClick={nextPhoto}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/20 hover:bg-white/30 text-white border-0 rounded-full w-12 h-12 p-0"
-              >
-                <ChevronRight size={24} />
-              </Button>
-
-              <Card className="glass-effect border-2 border-white/20">
-                <CardContent className="p-0">
-                  <img
-                    src={photos[selectedPhoto].src || "/placeholder.svg"}
-                    alt={photos[selectedPhoto].title}
-                    className="w-full h-auto max-h-[70vh] object-contain rounded-t-lg"
-                  />
-                  <div className="p-6 text-center">
-                    <h3 className="text-2xl font-bold text-purple-600 mb-2">
-                      {photos[selectedPhoto].title}
-                    </h3>
-                    <p className="text-gray-700 text-lg">
-                      {photos[selectedPhoto].description}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        )}
-
-        {/* Gallery Stats */}
-        <Card
-          className={`max-w-2xl mx-auto glass-effect border-2 border-purple-200 ${showContent ? "animate-slide-up" : "opacity-0"}`}
-          style={{ animationDelay: "1s" }}
-        >
-          <CardContent className="p-8 text-center">
-            <div className="text-4xl mb-4">📊</div>
-            <h3 className="text-2xl font-bold text-purple-600 mb-4">
-              Gallery Stats
-            </h3>
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div>
-                <div className="text-3xl font-bold text-pink-500">
-                  {photos.length}
-                </div>
-                <div className="text-gray-600">Photos</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-500">∞</div>
-                <div className="text-gray-600">Memories</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-yellow-500">100%</div>
-                <div className="text-gray-600">Amazing</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
+
+      {selected !== null && photos[selected] && (
+        <div
+          className="fixed inset-0 bg-plum-deep/95 backdrop-blur-sm z-50 flex items-center justify-center p-3"
+          onClick={() => setSelected(null)}
+          onTouchStart={(e) => (touchStartX.current = e.touches[0].clientX)}
+          onTouchEnd={onTouchEnd}
+        >
+          <button
+            onClick={() => setSelected(null)}
+            aria-label="Close"
+            className="absolute top-4 right-4 z-10 w-11 h-11 grid place-items-center rounded-full bg-white/15 text-white hover:bg-white/25"
+          >
+            <X size={22} />
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              prev();
+            }}
+            aria-label="Previous"
+            className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 grid place-items-center rounded-full bg-white/15 text-white hover:bg-white/25"
+          >
+            <ChevronLeft size={22} />
+          </button>
+
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              next();
+            }}
+            aria-label="Next"
+            className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 grid place-items-center rounded-full bg-white/15 text-white hover:bg-white/25"
+          >
+            <ChevronRight size={22} />
+          </button>
+
+          <img
+            src={photos[selected]}
+            alt=""
+            onClick={(e) => e.stopPropagation()}
+            className="max-w-full max-h-[85vh] object-contain rounded-lg"
+          />
+
+          <p className="absolute bottom-5 left-0 right-0 text-center text-xs text-muted">
+            {selected + 1} / {photos.length}
+          </p>
+        </div>
+      )}
     </div>
+  );
+}
+
+export default function GalleryPage() {
+  return (
+    <LockedPage>
+      <GalleryPageInner />
+    </LockedPage>
   );
 }

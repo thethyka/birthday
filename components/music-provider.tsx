@@ -8,8 +8,7 @@ import {
   useContext,
   type ReactNode,
 } from "react";
-import { Button } from "@/components/ui/button";
-import { Play, Pause, Volume2, VolumeX, Music } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 
 interface MusicContextType {
   isPlaying: boolean;
@@ -20,108 +19,97 @@ interface MusicContextType {
 
 const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
+/** Add or remove entries here; one is picked at random on load. */
+const TRACKS = ["/september.mp3", "/lets-groove.mp3"];
+
 export function MusicProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [showControls, setShowControls] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(true);
+  const [track, setTrack] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Picked after mount, not during render: the server has no idea which one it
+  // rolled, so choosing during render would mismatch the hydrated HTML.
   useEffect(() => {
-    if (!showPrompt) {
-      if (audioRef.current) {
-        audioRef.current.play().catch(() => {
-          console.log("Autoplay prevented by browser");
-        });
-        setIsPlaying(true);
-        setShowControls(true);
-      }
-    }
-  }, [showPrompt]);
+    setTrack(TRACKS[Math.floor(Math.random() * TRACKS.length)]);
+  }, []);
 
-  const handleStart = () => {
-    setShowPrompt(false);
-  };
+  useEffect(() => {
+    if (!track) return;
+    const el = audioRef.current;
+    if (!el) return;
+
+    // Try immediately — works when the browser allows it (media autoplay
+    // permitted, or she's interacted with the site before).
+    el.play().catch(() => {
+      /* blocked; the listeners below cover it */
+    });
+
+    // Otherwise start on the first thing she touches. Browsers treat a pointer
+    // or key event as the gesture that unblocks audio, so by the time she's
+    // tapped into anything the track is already running.
+    const start = () => {
+      el.play().catch(() => {});
+    };
+    const opts = { once: true } as const;
+    window.addEventListener("pointerdown", start, opts);
+    window.addEventListener("keydown", start, opts);
+    window.addEventListener("touchstart", start, opts);
+
+    return () => {
+      window.removeEventListener("pointerdown", start);
+      window.removeEventListener("keydown", start);
+      window.removeEventListener("touchstart", start);
+    };
+  }, [track]);
 
   const toggleMusic = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
+    const el = audioRef.current;
+    if (!el) return;
+    if (isPlaying) el.pause();
+    else el.play().catch(() => {});
   };
 
   const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.muted = !isMuted;
-      setIsMuted(!isMuted);
-    }
+    const el = audioRef.current;
+    if (!el) return;
+    el.muted = !isMuted;
+    setIsMuted(!isMuted);
   };
 
   return (
     <MusicContext.Provider
       value={{ isPlaying, isMuted, toggleMusic, toggleMute }}
     >
-      <audio
-        ref={audioRef}
-        loop
-        preload="auto"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        onError={(e) => {
-          const el = e.currentTarget as HTMLAudioElement;
-          console.warn("Failed to load birthday song. Tried src:", el.currentSrc);
-        }}
-      >
-        {/* Ensure correct path on GitHub Pages (basePath = /birthday). */}
-        <source src="/birthday-song.mp3" type="audio/mpeg" />
-      </audio>
-
-      {showPrompt && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-xs text-center border-4 border-pink-200 animate-bounce-in">
-            <div className="text-5xl mb-4">🎉🎂✨</div>
-            <h2 className="text-2xl font-bold text-purple-600 mb-2">
-              Ready to Celebrate?
-            </h2>
-            <p className="text-lg text-gray-700 mb-6">
-              Click below to start the party and play your birthday song! 🥳
-            </p>
-            <Button
-              className="bg-gradient-to-r from-pink-400 to-purple-400 text-white px-6 py-3 rounded-full text-lg shadow-lg hover:scale-105 transition-transform"
-              onClick={handleStart}
-              autoFocus
-            >
-              Start the Party!
-            </Button>
-          </div>
-        </div>
+      {/* preload="metadata" so an 8MB track isn't pulled down before she's
+          even decided to stay on the page. */}
+      {track && (
+        <audio
+          ref={audioRef}
+          src={track}
+          loop
+          preload="metadata"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+        />
       )}
 
-      {showControls && (
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-2">
-          <div className="glass-effect rounded-full p-3 shadow-lg">
-            <Music className="text-purple-600 animate-pulse" size={20} />
-          </div>
-          <Button
-            onClick={toggleMusic}
-            size="sm"
-            className="glass-effect hover:bg-white/40 text-purple-600 border-0 rounded-full w-12 h-12 p-0"
-          >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-          </Button>
-          <Button
-            onClick={toggleMute}
-            size="sm"
-            className="glass-effect hover:bg-white/40 text-purple-600 border-0 rounded-full w-12 h-12 p-0"
-          >
-            {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-          </Button>
-        </div>
-      )}
+      <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2">
+        <button
+          onClick={toggleMusic}
+          aria-label={isPlaying ? "Pause music" : "Play music"}
+          className="glass-effect rounded-full w-11 h-11 grid place-items-center text-gold hover:bg-cream/10"
+        >
+          {isPlaying ? <Pause size={17} /> : <Play size={17} />}
+        </button>
+        <button
+          onClick={toggleMute}
+          aria-label={isMuted ? "Unmute" : "Mute"}
+          className="glass-effect rounded-full w-11 h-11 grid place-items-center text-gold hover:bg-cream/10"
+        >
+          {isMuted ? <VolumeX size={17} /> : <Volume2 size={17} />}
+        </button>
+      </div>
 
       {children}
     </MusicContext.Provider>

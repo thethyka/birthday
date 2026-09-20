@@ -90,23 +90,24 @@ interface PersonCardProps {
 
 const PersonCard: React.FC<PersonCardProps> = ({ name, photoUrl, message }) => {
   return (
-    // ~30% larger than original (original w-96 = 24rem, now ~31rem; height 28rem -> 36rem)
-    <div className="w-[31rem] max-w-full h-[36rem] bg-white shadow-lg rounded-xl overflow-hidden p-7 flex flex-col">
-      {/* Name */}
-      <h2 className="text-3xl font-bold mb-5 text-center">{name}</h2>
+    // Height is capped against the viewport rather than fixed: the old 36rem
+    // was taller than a phone screen, which pushed the carousel arrows off.
+    <div className="w-[31rem] max-w-full h-[min(36rem,calc(100dvh-13rem))] panel overflow-hidden p-5 sm:p-7 flex flex-col">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center text-gold">
+        {name}
+      </h2>
 
-      {/* Photo */}
       {photoUrl && (
         <img
           src={photoUrl}
           alt={name}
-          className="w-60 h-60 object-cover rounded-full mx-auto mb-5"
+          loading="lazy"
+          className="w-36 h-36 sm:w-52 sm:h-52 object-cover rounded-full mx-auto mb-4 ring-2 ring-gold/30 shrink-0"
         />
       )}
 
-      {/* Message */}
       {message && (
-        <div className="flex-1 overflow-y-auto text-gray-800 text-lg leading-relaxed pr-1 whitespace-pre-line">
+        <div className="flex-1 overflow-y-auto text-cream/85 text-[15px] sm:text-lg leading-relaxed pr-1 whitespace-pre-line">
           {message}
         </div>
       )}

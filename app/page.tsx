@@ -1,74 +1,104 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { BackgroundEffects } from "../components/background-effects";
-import { ArrowRight, Gift, Sparkles, Heart } from "lucide-react";
+import { ArrowRight, Camera, Heart, Lock, Mail } from "lucide-react";
+import { BackgroundEffects } from "@/components/background-effects";
+import { useUnlock } from "@/components/unlock-provider";
+import { copy } from "@/content/copy";
 
 export default function HomePage() {
-  const [showContent, setShowContent] = useState(false);
+  const [show, setShow] = useState(false);
+  const { ready, count, required, unlocked, memories } = useUnlock();
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowContent(true), 500);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setShow(true), 250);
+    return () => clearTimeout(t);
   }, []);
 
   return (
     <div className="min-h-screen pt-16 relative overflow-hidden">
       <BackgroundEffects />
 
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        {/* Hero Section */}
+      <div className="container mx-auto px-4 py-10 sm:py-16 relative z-10">
+        {/* Hero */}
         <div
-          className={`text-center mb-16 ${
-            showContent ? "animate-bounce-in" : "opacity-0"
-          }`}
+          className={`text-center mb-14 ${show ? "animate-bounce-in" : "opacity-0"}`}
         >
-          <div className="mb-8">
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-gradient mb-4">
-              Happy Birthday
-            </h1>
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold text-purple-600 animate-bounce">
-              Sashah! 🎉
-            </h2>
-          </div>
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-bold text-gradient mb-6 leading-[1.05]">
+            {copy.heroTitle}
+          </h1>
 
-          <div className="flex justify-center items-center gap-4 mb-8">
-            <Gift className="text-pink-500 animate-spin" size={32} />
-            <p className="text-xl md:text-2xl text-gray-700 font-medium max-w-2xl whitespace-pre-line">
-              {
-                "✨ Happy 24th! ✨ \n\n Please enjoy this birthday website made just for you.\nWe hope you visit this page if you ever need a reminder of just how much you are loved 💕"
-              }
-            </p>
-            <Gift className="text-purple-500 animate-spin" size={32} />
-          </div>
-
-          <div className="text-6xl md:text-8xl animate-bounce mb-8">🎂🎈🎊</div>
+          <p className="text-base sm:text-xl text-cream/75 max-w-2xl mx-auto whitespace-pre-line leading-relaxed">
+            {copy.heroSubtitle}
+          </p>
         </div>
 
-        {/* Welcome Message */}
-        <Card
-          className={`max-w-4xl mx-auto mb-16 glass-effect border-2 border-pink-200 ${
-            showContent ? "animate-slide-up" : "opacity-0"
-          }`}
-          style={{ animationDelay: "0.3s" }}
-        ></Card>
+        {/* Primary CTA — without this she never finds the games. */}
+        <div
+          className={`max-w-xl mx-auto mb-14 ${show ? "animate-slide-up" : "opacity-0"}`}
+          style={{ animationDelay: "0.25s" }}
+        >
+          <Link
+            href="/games"
+            className="group block panel p-7 sm:p-9 text-center card-hover animate-glow"
+          >
+            <div className="text-5xl mb-4">🎁</div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gold mb-3">
+              {copy.gamesTitle}
+            </h2>
+            <p className="text-cream/70 mb-6">{copy.gamesIntro}</p>
 
-        {/* Birthday Countdown or Age Celebration */}
+            <span className="inline-flex items-center gap-2 bg-gold text-plum font-semibold px-7 py-3 rounded-full group-hover:gap-3 transition-all">
+              {copy.gamesCta}
+              <ArrowRight size={18} />
+            </span>
 
-        {/* Footer */}
-        <footer className="mt-16 text-center text-gray-600">
-          <p className="inline-flex items-center gap-2">
-            <span>Made with</span>
-            <Heart className="text-pink-500" size={16} />
-            <span>by</span>
-            <span className="font-semibold">Filip</span>
-            <span>•</span>
-            <span className="font-semibold">Vyv</span>
-            <span>•</span>
-            <span className="font-semibold">Karam</span>
-          </p>
+            {ready && (
+              <div className="mt-6 flex items-center justify-center gap-2 text-sm text-muted">
+                {unlocked ? (
+                  <>
+                    <Mail size={15} className="text-coral" />
+                    <span>Letter unlocked.</span>
+                  </>
+                ) : (
+                  <>
+                    <Lock size={15} />
+                    <span>
+                      {count} of {required} — something opens at {required}
+                    </span>
+                  </>
+                )}
+              </div>
+            )}
+          </Link>
+        </div>
+
+        {/* Secondary routes — hidden until she's finished one game. */}
+        {ready && memories && (
+          <div
+            className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-3xl mx-auto animate-slide-up"
+          >
+            <Link href="/peeeeeeeeeple" className="panel p-6 card-hover">
+              <Heart className="text-coral mb-3" size={26} />
+              <h3 className="text-lg font-bold text-gold mb-1.5">
+                {copy.lettersTitle}
+              </h3>
+              <p className="text-sm text-cream/60">{copy.lettersSubtitle}</p>
+            </Link>
+
+            <Link href="/gallery" className="panel p-6 card-hover">
+              <Camera className="text-gold mb-3" size={26} />
+              <h3 className="text-lg font-bold text-gold mb-1.5">
+                {copy.galleryTitle}
+              </h3>
+              <p className="text-sm text-cream/60">2025 and 2026.</p>
+            </Link>
+          </div>
+        )}
+
+        <footer className="mt-20 text-center text-sm text-muted">
+          <p>{copy.footer}</p>
         </footer>
       </div>
     </div>

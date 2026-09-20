@@ -31,3 +31,4 @@ next-env.d.ts
 /public/people.json
 
 /public/gallery-images.json
+/public/letter.json

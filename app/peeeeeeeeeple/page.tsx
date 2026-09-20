@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { PersonCard } from "@/components/ui/card";
-import { BackgroundEffects } from "../../components/background-effects";
+import { BackgroundEffects } from "@/components/background-effects";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { copy } from "@/content/copy";
+import { LockedPage } from "@/components/locked-page";
 
 type Person = {
   name: string;
@@ -11,51 +13,56 @@ type Person = {
   photoUrl?: string;
 };
 
-export default function GalleryPage() {
+function LettersPageInner() {
   const [showContent, setShowContent] = useState(false);
   const [people, setPeople] = useState<Person[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Get current person
   const currentPerson = people[currentIndex];
 
-  // Animate header
   useEffect(() => {
     const timer = setTimeout(() => setShowContent(true), 300);
     return () => clearTimeout(timer);
   }, []);
 
-  // Fetch people.json
   useEffect(() => {
     fetch("/people.json")
       .then((res) => res.json())
-      .then((data) => setPeople(data));
+      .then((data: Person[]) => setPeople(data.filter((p) => p.message)))
+      .catch(() => setPeople([]));
   }, []);
 
-  // Handle navigation
-  const goPrev = () => {
+  const goPrev = () =>
     setCurrentIndex((prev) => (prev > 0 ? prev - 1 : people.length - 1));
-  };
-
-  const goNext = () => {
+  const goNext = () =>
     setCurrentIndex((prev) => (prev < people.length - 1 ? prev + 1 : 0));
-  };
+
+  // Arrow keys on desktop.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "ArrowLeft") goPrev();
+      if (e.key === "ArrowRight") goNext();
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
 
   return (
     <div className="min-h-screen pt-16 relative overflow-x-hidden">
       <BackgroundEffects />
 
-      <div className="container mx-auto px-4 py-12 relative z-10 h-[calc(100vh-4rem)] flex flex-col">
-        {/* Header */}
+      <div className="container mx-auto px-4 py-8 relative z-10 flex flex-col items-center">
         <div
           className={`text-center mb-6 ${showContent ? "animate-bounce-in" : "opacity-0"}`}
         >
-          <h1 className="text-5xl md:text-7xl font-bold text-gradient mb-4">
-            ❤️❤️❤️
+          <h1 className="text-3xl sm:text-5xl font-bold text-gradient mb-2">
+            {copy.lettersTitle}
           </h1>
+          <p className="text-sm sm:text-base text-cream/60 max-w-lg mx-auto">
+            {copy.lettersSubtitle}
+          </p>
         </div>
 
-        {/* Single Person Card (larger) */}
         {currentPerson && (
           <div className="relative w-full max-w-5xl mx-auto flex justify-center">
             <PersonCard
@@ -65,32 +72,47 @@ export default function GalleryPage() {
               photoUrl={currentPerson.photoUrl}
             />
 
-            {/* Navigation Buttons */}
             <button
               onClick={goPrev}
               aria-label="Previous"
-              className="absolute top-1/2 left-2 sm:left-4 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-white shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="absolute top-1/2 left-0 sm:-left-4 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-surface-2 text-cream border border-gold/25 shadow-lg hover:bg-surface"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={22} />
             </button>
 
             <button
               onClick={goNext}
               aria-label="Next"
-              className="absolute top-1/2 right-2 sm:right-4 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-white shadow hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="absolute top-1/2 right-0 sm:-right-4 -translate-y-1/2 z-10 p-2 md:p-3 rounded-full bg-surface-2 text-cream border border-gold/25 shadow-lg hover:bg-surface"
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={22} />
             </button>
           </div>
         )}
 
-        {/* Footer / Index */}
         {people.length > 0 && (
-          <p className="mt-6 text-gray-600 text-center">
-            {currentIndex + 1} / {people.length}
-          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-1.5 max-w-md">
+            {people.map((p, i) => (
+              <button
+                key={p.name}
+                onClick={() => setCurrentIndex(i)}
+                aria-label={p.name}
+                className={`h-1.5 rounded-full transition-all ${
+                  i === currentIndex ? "w-6 bg-gold" : "w-1.5 bg-cream/15"
+                }`}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>
+  );
+}
+
+export default function LettersPage() {
+  return (
+    <LockedPage>
+      <LettersPageInner />
+    </LockedPage>
   );
 }
